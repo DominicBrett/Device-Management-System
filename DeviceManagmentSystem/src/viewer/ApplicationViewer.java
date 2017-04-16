@@ -16,29 +16,49 @@ public class ApplicationViewer extends JFrame {
         private JTextArea aboutDisplay = new JTextArea();
             private JTextArea deviceDetailsDisplay = new JTextArea();
         private JPanel controlPanel = new JPanel();
+            private JPanel sortPanel = new JPanel();
         private JButton searchButton = new JButton("Submit");
         private JTextField availFeild = new JTextField("", 6);
         private JButton availButton = new JButton("Submit");
    
         private JTextField searchFeild = new JTextField("", 6);
-          private JLabel searchLabel = new JLabel(" Create Device :   ");
+        private JTextField searchFeild2 = new JTextField("", 6);
+          private JLabel searchLabel = new JLabel(" Create Device (App will close) :   ");
+                    private JLabel searchFieldLabel = new JLabel(" Device Name :   ");
+                       private JLabel searchField2Label = new JLabel(" Device Descritption :   ");
       private JLabel availLabel = new JLabel(" Change Availability :   ");
   
            private JLabel deviceLabel = new JLabel(" Search Device :   ");
            private JTextField deviceFeild = new JTextField("", 6);
               private JButton deviceButton = new JButton("Submit");
+              
+              //Sort Panel Componenets
+                     private JLabel sortLabel = new JLabel(" Sort By:   ");
+                  private JButton iDSortButton = new JButton("1/0");
+                  private JButton alphSortButton = new JButton("A/Z");
+                  private JButton availableSortButton = new JButton("Availibility");
+                  
+                  //Sort Booleans
+                    private boolean aZ = true;
+                    private boolean num01 = false;
+                    private boolean avail = true;
       
 public void jFramePrint()
 {
 
     this.setLayout(new BorderLayout());
     this.add(controlPanel,BorderLayout.SOUTH);
+     this.add(sortPanel,BorderLayout.NORTH);
     searchButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
              String Input = searchFeild.getText();
-             ApplicationModel.getInstance().addDevice(Input);
+              String Input2 = searchFeild2.getText();
+             ApplicationModel.getInstance().writeDevices(Input, Input2);
+//             deviceDisplay.setText(" ");
              deviceDisplay.setText(ApplicationModel.getInstance().printDevices());
+             
+     
             
         }
     });
@@ -47,6 +67,7 @@ public void jFramePrint()
         public void actionPerformed(ActionEvent e) {
              String Input = availFeild.getText();
              ApplicationModel.getInstance().changeAvailabilty(Integer.parseInt(Input));
+             
              deviceDisplay.setText(ApplicationModel.getInstance().printDevices());
             
         }
@@ -57,18 +78,78 @@ public void jFramePrint()
              String Input = deviceFeild.getText();
             
              deviceDetailsDisplay.setText(ApplicationModel.getInstance().printDeviceDetails(Integer.parseInt(Input)));
-            
+           
         }
     });
-  
+  // Sort Pannel Buttons
+       alphSortButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+              if (aZ == true)
+            {
+            
+             deviceDisplay.setText(ApplicationModel.getInstance().sortDeviceAZ());
+              alphSortButton.setText("Z/A");
+             aZ = false;
+            }
+              else
+              {
+                   deviceDisplay.setText(ApplicationModel.getInstance().sortDeviceZA());
+                            alphSortButton.setText("A/Z");
+             aZ = true;
+              }
+           
+        }
+    });
+       iDSortButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          
+              if (num01 == true)
+            {
+             deviceDisplay.setText(ApplicationModel.getInstance().sortDevice01());
+             iDSortButton.setText("1/0");
+             num01 = false;
+        }
+              else
+              {
+                    deviceDisplay.setText(ApplicationModel.getInstance().sortDevice10());
+                   iDSortButton.setText("0/1");
+             num01 = true;
+              }
+        }
+    });
+         availableSortButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          
+              if (avail == true)
+            {
+             deviceDisplay.setText(ApplicationModel.getInstance().sortDeviceAU());
+          
+             avail = false;
+        }
+              else
+              {
+                    deviceDisplay.setText(ApplicationModel.getInstance().sortDeviceUA());
+   
+             avail = true;
+              }
+        }
+    });
   
        
     
         
    deviceDisplay.setText(ApplicationModel.getInstance().printDevices());
    
+   //controlPanel Add
     controlPanel.add(searchLabel);
+      controlPanel.add(searchFieldLabel);
     controlPanel.add(searchFeild);
+            controlPanel.add(searchField2Label);
+        controlPanel.add(searchFeild2);
     controlPanel.add(searchButton);
         controlPanel.add(availLabel);
     controlPanel.add(availFeild);
@@ -77,7 +158,14 @@ public void jFramePrint()
     controlPanel.add(deviceFeild);
     controlPanel.add(deviceButton);
     
-    this.setSize(860,690);
+    //sortPanel Add
+        sortPanel.add(sortLabel);
+    sortPanel.add(iDSortButton);
+    sortPanel.add(alphSortButton);
+    sortPanel.add(availableSortButton);
+
+    
+    this.setSize(1600,900);
     this.setTitle("Device Managment System");
     this.setDefaultCloseOperation(EXIT_ON_CLOSE);
    
@@ -110,6 +198,10 @@ public void jFramePrint()
 }
     
 
+        
+      
+    
+  
         
       
     
